@@ -41,4 +41,6 @@ public:
 	void tirer();
 	virtual void strategie(std::vector<Avion> v)=0;
 	~Avion();
+	
+	static void DetecteCollision(int cube_size, &vector<Avion*> avions); //Méthode pour détruire les avions en collision
 };
