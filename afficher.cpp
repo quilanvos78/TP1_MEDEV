@@ -4,14 +4,14 @@
 
 using namespace std;
 
-int afficher(vector<Avion*> escadron)
+int afficherAvion(vector<Avion*> escadron)
 {
 	/* OBJECTS CREATION */
 
-	/* VIEWER CREATION */ 
+	/* VIEWER CREATION */
 
-	osg::ref_ptr<osgViewer::Viewer> viewer = new osgViewer::Viewer; 
-	
+	osg::ref_ptr<osgViewer::Viewer> viewer = new osgViewer::Viewer;
+
 	/* ROOT CREATION */
 
 	osg::ref_ptr<osg::Group> root (new osg::Group);
@@ -44,14 +44,14 @@ int afficher(vector<Avion*> escadron)
 	patAvionEnnemi2->setScale(osg::Vec3f(3,3,3));
 
 	/* MATERIAL CREATION & INITIALISATION */
-	
+
 	osg::ref_ptr<osg::Material> mat (new osg::Material);
 	osg::ref_ptr<osg::Material> mat2 (new osg::Material);
 	mat->setAmbient(mat->FRONT_AND_BACK,osg::Vec4f(1,1,1,1));
 	mat2->setAmbient(mat2->FRONT_AND_BACK,osg::Vec4f(1,1,1,1));
 
 	/* AIRCRAFTS IMPORTATION */
-	
+
 	osg::ref_ptr<osg::Node> avionAmi(osgDB::readNodeFile("Avion.3ds"));
 	osg::ref_ptr<osg::Node> avionEnnemi(osgDB::readNodeFile("TIE-fighter.3ds"));
 
@@ -68,7 +68,7 @@ int afficher(vector<Avion*> escadron)
 	StateSetEnnemi2->setAttribute(mat2);
 
 	/* SCENE GRAPH */
-		
+
 	root->addChild(patAlignement.get());
 	root->addChild(patAvionEnnemi1.get());
 	root->addChild(patAvionEnnemi2.get());

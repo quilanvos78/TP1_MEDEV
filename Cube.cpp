@@ -1,29 +1,130 @@
 #include "Cube.h"
+#include <iostream>
+#include <ctime>
+#include <cstdlib>
+#include "Avion.h"
+#include "Joueur.h"
+#include "Ennemi.h"
+#include <vector>
+#include "Cube.h"
+#include "afficher.h"
 
+#include <iostream>
+#include <ctime>
+#include <cstdlib>
+#include <vector>
+
+using namespace std;
 /* Affichage du monde */
 
 Cube::Cube(int _n) {
 	root = new osg::Group;
+	viewer = new osgViewer::Viewer;
 	n = _n;
+	compteur =0;
+    Joueur* J1 = new Joueur();
+    Joueur* J2 = new Joueur();
+    Ennemi* E1 = new Ennemi();
+    Ennemi* E2 = new Ennemi();
+    J1->setPosition(osg::Vec3f(0,5,0));
+    J1->setDirection(osg::Vec3f(1,0,0));
+    J1->setId(0);
+    J2->setPosition(osg::Vec3f(0,3,0));
+    J2->setDirection(osg::Vec3f(1,0,0));
+    E1->setPosition(osg::Vec3f(2,5,2));
+    E1->setDirection(osg::Vec3f(-1,0,0));
+    E2->setPosition(osg::Vec3f(2,8,2));
+    E2->setDirection(osg::Vec3f(-1,0,0));
+    ListeAvion.push_back(J1);
+    ListeAvion.push_back(J2);
+    ListeAvion.push_back(E1);
+    ListeAvion.push_back(E2);
+
+
+	ConstructionAvion();
+
+	viewer->addEventHandler(new osgViewer::StatsHandler);
+
+	//Windows size handler
+	viewer->addEventHandler(new osgViewer::WindowSizeHandler);
+
+	// add the state manipulator
+    viewer->addEventHandler( new osgGA::StateSetManipulator(viewer->getCamera()->getOrCreateStateSet()));
+	
+	
+	viewer->setCameraManipulator(new osgGA::TrackballManipulator);
+    viewer->realize();
+	
+	viewer->setSceneData(root.get());
+	afficherCube();
+}
+void Cube::ConstructionAvion() {
+	
+	patAvionAmi1 = new osg::PositionAttitudeTransform();
+	patAvionAmi2 = new osg::PositionAttitudeTransform();
+	patAlignement = new osg::PositionAttitudeTransform();
+	patAlignement->setAttitude(osg::Quat(osg::DegreesToRadians(-60.0),osg::Vec3f(0,0,1)));
+	patAvionEnnemi1 = new osg::PositionAttitudeTransform();
+	patAvionEnnemi2 = new osg::PositionAttitudeTransform();
+	patSCALE = new osg::PositionAttitudeTransform();
+		/* PAT INITIALISATION */ //corriger echelle position
+
+	patSCALE->setScale(osg::Vec3f(0.0001,0.0001,0.0001));
+	patAvionEnnemi1->setScale(osg::Vec3f(3,3,3));
+	patAvionEnnemi2->setScale(osg::Vec3f(3,3,3));
+
+	/* MATERIAL CREATION & INITIALISATION */
+
+	osg::ref_ptr<osg::Material> mat (new osg::Material);
+	osg::ref_ptr<osg::Material> mat2 (new osg::Material);
+	mat->setAmbient(mat->FRONT_AND_BACK,osg::Vec4f(1,1,1,1));
+	mat2->setAmbient(mat2->FRONT_AND_BACK,osg::Vec4f(1,1,1,1));
+
+	/* AIRCRAFTS IMPORTATION */
+
+	osg::ref_ptr<osg::Node> avionAmi(osgDB::readNodeFile("Avion.3ds"));
+	osg::ref_ptr<osg::Node> avionEnnemi(osgDB::readNodeFile("TIE-fighter.3ds"));
+
+	/* STATE SETS CREATION & INITIALISATION */
+
+	osg::ref_ptr<osg::StateSet> StateSetAmi1(patAvionAmi1->getOrCreateStateSet());
+	osg::ref_ptr<osg::StateSet> StateSetAmi2(patAvionAmi2->getOrCreateStateSet());
+	osg::ref_ptr<osg::StateSet> StateSetEnnemi1(patAvionEnnemi1->getOrCreateStateSet());
+	osg::ref_ptr<osg::StateSet> StateSetEnnemi2(patAvionEnnemi2->getOrCreateStateSet());
+	patAvionAmi1->setPosition(osg::Vec3d(-10,-1,-1));
+
+	StateSetAmi1->setAttribute(mat);
+	StateSetAmi2->setAttribute(mat);
+	StateSetEnnemi1->setAttribute(mat2);
+	StateSetEnnemi2->setAttribute(mat2);
+
+	/* SCENE GRAPH */
+	root->addChild(patSCALE.get());
+	//patSCALE->addChild(patAvionEnnemi1.get());
+	//patSCALE->addChild(patAvionEnnemi2.get());
+	
+	patSCALE->addChild(patAlignement.get());
+	patAlignement->addChild(patAvionAmi1.get());
+	patAlignement->addChild(patAvionAmi2.get());
+
+	patAvionAmi1->addChild(avionAmi.get());
+	patAvionAmi2->addChild(avionAmi.get());
+	patAvionEnnemi2->addChild(avionEnnemi.get());
+	patAvionEnnemi1->addChild(avionEnnemi.get());
 }
 
-int Cube::init()
+void Cube::afficherCube()
 {
-/* OBJECTS CREATION */
 
-	//Creating the viewer	
-	osgViewer::Viewer viewer;
-	/*viewer.realize();
-	viewer.getCamera()->setProjectionMatrixAsPerspective(60.0,16.0/9.0,0.1,10.0);
-	viewer.getCamera()->setViewMatrix(osg::Matrix::lookAt(osg::Vec3f(0, -1, 2),osg::Vec3f(0, 0, 0),osg::Vec3f(0, 0, 1)));
-	*/
+	
+	cout<<"Afficher cube"<<endl;
 	// StateSet de root
 	osg::ref_ptr<osg::StateSet> rootStateSet (root->getOrCreateStateSet());
 
 /* TERRAIN */
-	
+
 	osg::ref_ptr<osg::PositionAttitudeTransform> terrainTranslation (new osg::PositionAttitudeTransform);
-	
+
 	terrainTranslation->setPosition(osg::Vec3f(0,0,-1.8));
 	// Create transformation node
 	osg::ref_ptr<osg::MatrixTransform> terrainScaleMat (new osg::MatrixTransform);
@@ -61,7 +162,7 @@ int Cube::init()
 	translationPlane3->setPosition(osg::Vec3f(0,2,0));
 	translationPlane3->addChild(geodePlane3.get());
 
-	
+
 	osg::ref_ptr<osg::PositionAttitudeTransform> translationPlane4 (new osg::PositionAttitudeTransform);
    	osg::ref_ptr<osg::Geode> geodePlane4 (new osg::Geode);
 	osg::ref_ptr<osg::Box> myPlane4 (new osg::Box(osg::Vec3f(),8,8,0.01));
@@ -70,7 +171,7 @@ int Cube::init()
 	translationPlane4->setPosition(osg::Vec3f(0,0,4));
 	translationPlane4->addChild(geodePlane4.get());
 
-	
+
 	osg::ref_ptr<osg::Material> material (new osg::Material);
 
 	//Setting material 1 - capsule
@@ -79,12 +180,12 @@ int Cube::init()
 	material->setSpecular(osg::Material::Face::FRONT_AND_BACK,osg::Vec4(0,0,0.8,1));
 	material->setEmission(osg::Material::Face::FRONT_AND_BACK,osg::Vec4(0,0,0,0));
 	material->setShininess(osg::Material::Face::FRONT_AND_BACK, 0);
-	
+
 	osg::ref_ptr<osg::StateSet> nodeStateSet1 ( geodePlane1->getOrCreateStateSet() );
 	osg::ref_ptr<osg::StateSet> nodeStateSet2 ( geodePlane2->getOrCreateStateSet() );
 	osg::ref_ptr<osg::StateSet> nodeStateSet3 ( geodePlane3->getOrCreateStateSet() );
 	osg::ref_ptr<osg::StateSet> nodeStateSet4 ( geodePlane4->getOrCreateStateSet() );
-	
+
 	nodeStateSet1->setAttribute(material);
 	nodeStateSet2->setAttribute(material);
 	nodeStateSet3->setAttribute(material);
@@ -93,16 +194,16 @@ int Cube::init()
 /* MASTER CUBE */
 
 	osg::ref_ptr<osg::Group> cube = createCube();
-	
+
 /* LIGHTING */
-	
+
 	//Create nodes
 	osg::ref_ptr<osg::Group> lightGroup0 (new osg::Group);
 	osg::ref_ptr<osg::LightSource> lightSource0 = new osg::LightSource;
 
 	//Create a local light
 	osg::Vec4f lightPosition0(0,-2,3,0);
-	
+
 	osg::ref_ptr<osg::Light> myLight0 = new osg::Light;
 	myLight0->setLightNum(0);
 	myLight0->setPosition(lightPosition0);
@@ -119,16 +220,6 @@ int Cube::init()
 	// Allumage des lumières
 	rootStateSet->setMode(GL_LIGHT0, osg::StateAttribute::ON);
 
-/* KEYBOARD INPUT */
-	
- 	//Stats Event Handler s key
-	viewer.addEventHandler(new osgViewer::StatsHandler);
-
-	//Windows size handler
-	viewer.addEventHandler(new osgViewer::WindowSizeHandler);
-	
-	// add the state manipulator
-    viewer.addEventHandler( new osgGA::StateSetManipulator(viewer.getCamera()->getOrCreateStateSet()));
 
 /* SCENE GRAPH*/
 
@@ -137,19 +228,17 @@ int Cube::init()
 	root->addChild(cube.get());
 	root->addChild(lightGroup0.get());
 	root->addChild(terrainTranslation.get());
-	root->addChild(translationPlane1.get());
-	root->addChild(translationPlane2.get());
-	root->addChild(translationPlane3.get());
-	root->addChild(translationPlane4.get());
+	//root->addChild(translationPlane1.get());
+	//root->addChild(translationPlane2.get());
+	//root->addChild(translationPlane3.get());
+	//root->addChild(translationPlane4.get());
 
 
 	// Set the scene data
-	viewer.setSceneData(root.get()); 
 
 /* START VIEWER */
 
 	//The viewer.run() method starts the threads and the traversals.
-	return(viewer.run());
 }
 
 
@@ -175,7 +264,7 @@ osg::ref_ptr<osg::Node> Cube::createSubCube(int i, int j,int k) {
 }
 
 osg::ref_ptr<osg::Group> Cube::createCube() {
-	osg::ref_ptr<osg::Group> cube (new osg::Group);   
+	osg::ref_ptr<osg::Group> cube (new osg::Group);
 	osg::PolygonMode * polygonMode = new osg::PolygonMode;
     polygonMode->setMode( osg::PolygonMode::FRONT_AND_BACK, osg::PolygonMode::POINT);
     osg::ref_ptr<osg::StateSet> stateSet (cube->getOrCreateStateSet());
@@ -189,4 +278,109 @@ osg::ref_ptr<osg::Group> Cube::createCube() {
 	}
 
 	return cube;
+}
+
+void Cube::afficherAvion() {
+	cout<<"Afficher avion"<<endl;
+
+	
+	osg::Quat attitude;
+
+	cout<<getSubCubePosition(ListeAvion[0]->getPosition()[0],ListeAvion[0]->getPosition()[1],ListeAvion[0]->getPosition()[2])[0]<<endl;
+	cout<<getSubCubePosition(ListeAvion[0]->getPosition()[0],ListeAvion[0]->getPosition()[1],ListeAvion[0]->getPosition()[2])[1]<<endl;
+	cout<<getSubCubePosition(ListeAvion[0]->getPosition()[0],ListeAvion[0]->getPosition()[1],ListeAvion[0]->getPosition()[2])[2]<<endl;
+   		osg::ref_ptr<osg::Geode> geodeSubCube (new osg::Geode);
+		osg::ref_ptr<osg::Box> mySubCube (new osg::Box(getSubCubePosition(ListeAvion[0]->getPosition()[0],ListeAvion[0]->getPosition()[1],ListeAvion[0]->getPosition()[2]),2.0/n));
+		osg::ref_ptr<osg::ShapeDrawable> drawableSubCube (new osg::ShapeDrawable(mySubCube.get()));
+		geodeSubCube->addDrawable(drawableSubCube.get());
+		//root->addChild(geodeSubCube);
+	//patAvionAmi1->setPosition(osg::Vec3d(-10,-1,-1));
+	patAvionAmi2->setPosition(getSubCubePosition(ListeAvion[1]->getPosition()[1],ListeAvion[1]->getPosition()[1],ListeAvion[1]->getPosition()[2]));
+	patAvionEnnemi1->setPosition(getSubCubePosition(ListeAvion[2]->getPosition()[2],ListeAvion[2]->getPosition()[1],ListeAvion[2]->getPosition()[2]));
+	patAvionEnnemi2->setPosition(getSubCubePosition(ListeAvion[3]->getPosition()[3],ListeAvion[3]->getPosition()[1],ListeAvion[3]->getPosition()[2]));
+	attitude.makeRotate(osg::Vec3d(1,0,0),osg::Vec3d(ListeAvion[0]->getDirection()));
+	//patAvionAmi1->setAttitude(attitude);
+	attitude.makeRotate(osg::Vec3d(1,0,0),osg::Vec3d(ListeAvion[1]->getDirection()));
+	patAvionAmi2->setAttitude(attitude);
+	attitude.makeRotate(osg::Vec3d(1,0,0),osg::Vec3d(ListeAvion[2]->getDirection()));
+	patAvionEnnemi1->setAttitude(attitude);
+	attitude.makeRotate(osg::Vec3d(1,0,0),osg::Vec3d(ListeAvion[3]->getDirection()));
+	patAvionEnnemi2->setAttitude(attitude);
+
+
+
+}
+
+void Cube::elimination(vector<int> ListeTouchés, vector<Avion*> &ListeAvion) // Supprime les avions contenus dans le vecteur Listetouchés du vecteur principal ListeAvion à partir de leurs Id
+{
+    for (unsigned int i=0;i<ListeTouchés.size();i++) // on élimine les avions touchés
+            {
+                for(unsigned int j= 0; j<ListeAvion.size();j++)
+                {
+                    if (ListeAvion[j]->getId() == ListeTouchés[i])
+                    {
+                         ListeAvion.erase(ListeAvion.begin() + j);
+                    }
+                }
+
+            }
+}
+
+bool Cube::VerificationFin(std::vector<Avion*> &ListeAvion) // Si il reste deux avions ou moins, on regarde leurs camps pour savoir si la partie est finie
+{
+    if (ListeAvion.size() == 2)
+    {
+       return  (ListeAvion[0]->getCamp() == ListeAvion[1]->getCamp());
+    }
+    if (ListeAvion.size() == 1)
+    {
+        return true ;
+    }
+    else
+    {
+        return false ;
+    }
+}
+
+void Cube::mainLoop() {
+
+		afficherAvion();
+	
+    for (unsigned int i=0;i<ListeAvion.size();i++) // Annonce les paramètres de chaque avion
+    {
+        ListeAvion[i]->strategie(ListeAvion);
+    }
+    for (unsigned int i=0;i<ListeAvion.size();i++) // faire tourner et avancer tous les avions
+    {
+        ListeAvion[i]->tourner();
+        ListeAvion[i]->avancer(n);
+    }
+    /*ListeAvion[0]->DetecteCollision(n,ListeAvion);
+
+    vector<int> ListeAvionsTouches ;
+    for (unsigned int i=0;i<ListeAvion.size();i++) // Chaque avion Tire et on récupère les id des avions touchés
+    {
+        int idTouche = ListeAvion[i]->tirer(n, ListeAvion);
+	cout<<"2"<<endl;
+        if (idTouche != -1 )
+        {
+	cout<<"3"<<endl;
+            ListeAvionsTouches.push_back(idTouche);
+        }
+    }
+	cout<<"4"<<endl;
+    elimination(ListeAvionsTouches,ListeAvion);*/
+
+	if ( compteur == 50 ) {
+		
+   		osg::ref_ptr<osg::Geode> geodeSubCube (new osg::Geode);
+		osg::ref_ptr<osg::Box> mySubCube (new osg::Box(osg::Vec3f(1,1,1),0.5));
+		osg::ref_ptr<osg::ShapeDrawable> drawableSubCube (new osg::ShapeDrawable(mySubCube.get()));
+		geodeSubCube->addDrawable(drawableSubCube.get());
+		//root->addChild(geodeSubCube);
+
+	}
+	compteur ++;
+	cout<<compteur<<endl;
+    viewer->frame();
 }
