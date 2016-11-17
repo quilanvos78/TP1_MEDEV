@@ -25,7 +25,7 @@ public:
 	float getAngle(){return angle;};
 	float getCap(){return cap;};
 	bool getCamp(){return camp;};
-	bool getId(){return id;};
+	int getId(){return id;};
 
 	void setPosition(osg::Vec3f _position){ position=_position;};
 	void setDirection(osg::Vec3f _direction){ direction=_direction;};
