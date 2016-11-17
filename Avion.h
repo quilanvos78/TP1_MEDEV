@@ -1,5 +1,6 @@
 #pragma once
 #include <osg/Vec3f>
+#include <cmath>
 
 class Avion{
 
