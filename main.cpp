@@ -7,17 +7,17 @@
 #include "Ennemi.h"
 #include <vector>
 #include "Cube.h"
+#include "afficher.h"
+
 using namespace std ;
 
 // FONCTIONS UTILITAIRES
 
 void elimination(vector<int> ListeTouchés, vector<Avion*> &ListeAvion) // Supprime les avions contenus dans le vecteur Listetouchés du vecteur principal ListeAvion à partir de leurs Id
 {
-    int i ;
-    int j ;
-    for (i=0;i<ListeTouchés.size();i++) // on élimine les avions touchés
+    for (unsigned int i=0;i<ListeTouchés.size();i++) // on élimine les avions touchés
             {
-                for(j= 0; j<ListeAvion.size();j++)
+                for(unsigned int j= 0; j<ListeAvion.size();j++)
                 {
                     if (ListeAvion[j]->getId() == ListeTouchés[i])
                     {
@@ -75,45 +75,39 @@ int main(){
     ListeAvion.push_back(E2);
 
     //BOUCLE PRINCIPALE
+		/* START VIEWER */
 
-    int i ;
-    int j ;
+	viewer->setUpViewInWindow(100, 100, 800, 800);
+	viewer->setSceneData(root.get());
+	viewer->getCamera()->setClearColor(osg::Vec4(0,0,0,0)); //Background color
 
-    while(!fini)
-    {
-        string input ;
-        cin >> input ;
-        if (input == " ")
-        {
+
+
+		std::cout << "SALUT" << std::endl;
+
             afficher(ListeAvion);
-
-            for (i=0;i<ListeAvion.size();i++) // Annonce les paramètres de chaque avion
+			std::cout << "SAxDxDLUT" << std::endl;
+            for (unsigned int i=0;i<ListeAvion.size();i++) // Annonce les paramètres de chaque avion
             {
                 ListeAvion[i]->strategie(ListeAvion);
             }
-            for (i=0;i<ListeAvion.size();i++) // faire tourner et avancer tous les avions
+            for (unsigned int i=0;i<ListeAvion.size();i++) // faire tourner et avancer tous les avions
             {
                 ListeAvion[i]->tourner();
                 ListeAvion[i]->avancer(cube_size);
             }
-            DetecteCollision(ListeAvion);
+            ListeAvion[0]->DetecteCollision(cube_size,ListeAvion);
 
-            vector<int> ListeAvionsTouchés ;
-            for (i=0;i<ListeAvion.size();i++) // Chaque avion Tire et on récupère les id des avions touchés
+            vector<int> ListeAvionsTouches ;
+            for (unsigned int i=0;i<ListeAvion.size();i++) // Chaque avion Tire et on récupère les id des avions touchés
             {
-                int idTouché = ListeAvion[i]->tirer(cube_size, ListeAvion);
-                 if (idTouché != -1 )
+                int idTouche = ListeAvion[i]->tirer(cube_size, ListeAvion);
+                 if (idTouche != -1 )
                  {
-                     ListeAvionsTouchés.push_back(idTouché);
+                     ListeAvionsTouches.push_back(idTouche);
                  }
             }
-            elimination(ListeAvionsTouchés,ListeAvion);
-
-        }
-
-        fini = VerificationFin(ListeAvion);
-
-     }
+            elimination(ListeAvionsTouches,ListeAvion);
 
     return 0;
     }
