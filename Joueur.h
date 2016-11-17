@@ -3,10 +3,9 @@
 #include "Avion.h"
 
 class avionJoueur : public Avion{
-private:
-	
+
 public:
-	avionJoueur();
+	avionJoueur(osg::Vec3f pos, osg::Vec3f dir);
 	~avionJoueur();
 
 	virtual void avancer();
