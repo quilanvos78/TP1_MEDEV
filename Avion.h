@@ -39,7 +39,7 @@ public:
 	virtual void avancer(int cube_size); //On a défini la fonction vide dans le cpp
 	void tourner(float tang, float dir);
 	int tirer(int taillecube, std::vector<Avion> ListeAvions);
-	virtual void strategie(std::vector<Avion> v)=0;
+	virtual void strategie(std::vector<Avion> v, int taille_cube)=0;
 	~Avion();
 	
 	static void DetecteCollision(int cube_size, &vector<Avion*> avions); //Méthode pour détruire les avions en collision
