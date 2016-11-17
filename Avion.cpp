@@ -13,7 +13,7 @@ Avion::Avion(){
 Avion::~Avion(){
 }
 
-void Avion::avancer(int cube_size,&vector<avion*> avions, int i){};
+void Avion::avancer(int cube_size){};
 
 void Avion::tourner(float tang, float dir)
 {
