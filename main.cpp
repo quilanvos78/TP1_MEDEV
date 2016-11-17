@@ -1,15 +1,18 @@
 
 #include <iostream>
+#include <ctime>
+#include <cstdlib>
 #include "Avion.h"
 #include "Joueur.h"
 #include "Ennemi.h"
 #include <vector>
+#include "Cube.h"
 using namespace std ;
 
 void elimination(vector<int> ListeTouchés, vector<Avion*> &ListeAvion)
 {
     int i ;
-    int j ; 
+    init j ;
     for (i=0;i<ListeAvionsTouchés.size();i++) // on élimine les avions touchés
             {
                 for(j= 0; j<ListeAvion.size();j++)
@@ -23,9 +26,26 @@ void elimination(vector<int> ListeTouchés, vector<Avion*> &ListeAvion)
             }
 }
 
+bool VerificationFin(vector<Avion> ListeAvion)
+{
+    if (ListeAvion.size() == 2)
+    {
+       return  ListeAvion[0]->getCamp() == ListeAvion[1]->getCamp()
+    }
+    if (ListeAvion.size() == 1)
+    {
+        return true ;
+    }
+    else
+    {
+        return false ;
+    }
+}
+
 int main(){
-    int cube_size = 13;
-    bool fini = false ;
+    srand(Time(NULL));
+    osg::int cube_size = 13;
+    osg::bool fini = false ;
     Joueur* J1 = new Joueur();
     Joueur* J2 = new Joueur();
     Ennemi* E1 = new Ennemi();
@@ -65,7 +85,7 @@ int main(){
                 ListeAvion[i]->avancer(cube_size,ListeAvion,i);
             }
             VerificationCollision(ListeAvion);
-            
+
             vector<int> ListeAvionsTouchés ;
             for (i=0;i<ListeAvion.size();i++) // Chaque avion Tire et on récupère les id des avions touchés
             {
@@ -76,8 +96,10 @@ int main(){
                  }
             }
             elimination(ListeAvionsTouchés,ListeAvion);
-           
+
         }
+
+        fini = VerificationFin(ListeAvion);
 
      }
 
