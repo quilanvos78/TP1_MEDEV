@@ -2,14 +2,15 @@
 #include<cmath>
 #include<osg/vec3f>
 
-avionJoueur::avionJoueur(osg::Vec3f pos, osg::Vec3f dir) : Avion()
+Joueur::Joueur(osg::Vec3f pos, osg::Vec3f dir, int num) : Avion()
 {
 	position = pos;
 	direction = dir;
 	camp=false;
+	id=num;
 }
 
-avionJoueur::~avionJoueur(){
+Joueur::~Joueur(){
 }
 
 void Joueur::avancer(int cube_size,&vector<avion*> avions, int i):avion(int cube_size,&vector<avion*> avions, int i){//i correspond à la place de l'avion dans le vecteur, ne pas oublier de mettre le bon argument dans le main

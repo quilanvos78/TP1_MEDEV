@@ -12,6 +12,7 @@ protected:
 	float angle; // demandez à mael xD
 	float cap; // demandez à mael  (c'est de la 3D lol)
 	bool camp; // 0 pour le joueur 1 pour lennemi
+	int id;
 	
 public:
 	Avion();
@@ -24,7 +25,7 @@ public:
 	float getAngle(){return angle;};
 	float getCap(){return cap;};
 	bool getCamp(){return camp;};
-
+	bool getId(){return id;};
 
 	void setPosition(osg::Vec3f _position){ position=_position;};
 	void setDirection(osg::Vec3f _direction){ direction=_direction;};
