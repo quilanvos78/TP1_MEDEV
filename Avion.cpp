@@ -71,13 +71,13 @@ int Avion::tirer(int taillecube, std::vector<Avion> ListeAvions) // Renvoie l'id
 		float eps=0.01;
 
 		//Position du projectile
-		float posProj=position;
+		osg::Vec3f posProj=position;
 
 		//Nombre d'avions dans la partie
 		int nbAvions = 	ListeAvions.size();
 
 		//Vecteur direction de l'avion que l'on normalise
-		float directionProj=direction;
+		osg::Vec3f directionProj=direction;
 		float norme=sqrt(pow(directionProj[0],2)+pow(directionProj[1],2)+pow(directionProj[2],2));
 		directionProj[0]=directionProj[0]/norme;
 		directionProj[1]=directionProj[1]/norme;
