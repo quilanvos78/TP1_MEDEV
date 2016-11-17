@@ -1,6 +1,9 @@
 #include "Joueur.h"
 #include<cmath>
 #include<osg/vec3f>
+#include <vector>
+
+using namespace osg;
 
 avionJoueur::avionJoueur(osg::Vec3f pos, osg::Vec3f dir) : Avion()
 {
@@ -20,4 +23,52 @@ void Joueur::avancer(int cube_size,&vector<avion*> avions, int i):avion(int cube
         avions.erase(avions.begin()+i);
         delete this;
     }
+}
+
+void avionJoueur::strategie(vector<Avion> v){
+
+    //Strategie hors mur
+    //Si on peut pointer (cône 45degree) vers un avion ennemi (qui avance
+    //d'une case dans sa propre direction) alors on tourne et on tir si on peu
+    //Si on ne peut pas pointer on va se diriger vers l'avion ennemi le plus proche
+
+    int indiceProche = -1; //indice de l'avion ennemi  le plus proche
+    float angleMin = -1;
+    for (int i = 0; i< v.size();i++)
+    {
+        if (v[i].getCamp) //avion ennemi
+        {
+            Vec3f posFuture = v[i].getPosition +v[i].getDirection - position;
+            posFuture.normalize();
+            float prodScal = posFuture^direction;
+            if (prodScal<angleMin || angleMin == -1)
+            {
+                angleMin = acos(prodScal);
+                indiceProche = i;
+            }
+        }
+    }
+    //on a l'avion le plus proche
+    //decision tir
+    if (angleMin<45 && !cooldown)
+    {
+        tir = true;
+    }
+    else{
+        tir = false;
+    }
+    //deplacement vers l'avion le plus proche
+    if (angleMin< 80)
+    {
+        angle = min(angleMin, 45.0f);
+
+    }
+
+
+    //Prevoir l'evitement des murs
+     for (int i = 0; i< v.size();i++)
+    {
+        if (v[i].camp == 0)
+    }
+
 }
