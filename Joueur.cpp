@@ -26,7 +26,7 @@ void Joueur::avancer(int cube_size,&vector<avion*> avions, int i):avion(int cube
     }
 }
 
-void avionJoueur::strategie(vector<Avion> v){
+void Joueur::strategie(std::vector<Avion> v){
 
     //Strategie hors mur
     //Si on peut pointer (cône 45degree) vers un avion ennemi (qui avance

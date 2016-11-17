@@ -15,7 +15,7 @@ Avion::~Avion(){
 
 void Avion::avancer(int cube_size,&vector<avion*> avions, int i){};
 
-void Avion::tourner (float tang, float dir)
+void Avion::tourner(float tang, float dir)
 {
 	osg::Quat q1 = osg::Quat( tang*osg::PI/180.f,osg::Vec3d(direction^up),0, osg::Vec3d(direction),0, osg::Vec3d(up)); 
 	up=q1*osg::Vec3d(up);

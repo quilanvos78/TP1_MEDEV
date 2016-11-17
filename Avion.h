@@ -37,7 +37,7 @@ public:
 	void setCamp(bool _camp){ camp=_camp;};
 
 	virtual void avancer(int cube_size,&vector<avion*> avions, int i); //On a défini la fonction vide dans le cpp
-	virtual void tourner(osg::Vec3f angle)=0;
+	void tourner(float tang, float dir);
 	void tirer();
 
 	~Avion();
