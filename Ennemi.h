@@ -11,6 +11,6 @@ public:
 	bool getCamp(){return camp;};
 	void setCamp(bool _camp){ camp=_camp;};
 
-	void avancer(int cube_size,&vector<avion*> avions, int i);
+	void avancer(int cube_size);
 	virtual void tourner(osg::Vec3f angle);
 };

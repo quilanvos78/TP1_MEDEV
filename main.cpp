@@ -39,10 +39,10 @@ int main(){
     E2.setPosition = osg::Vec3f(13,8,13);
     E2.setDirection = osg::Vec3f(-1,0,0);
     vector<Avion*> ListeAvion ;
-    ListeAvion.pushback(J1);
-    ListeAvion.pushback(J2);
-    ListeAvion.pushback(E1);
-    ListeAvion.pushback(E2);
+    ListeAvion.push_back(J1);
+    ListeAvion.push_back(J2);
+    ListeAvion.push_back(E1);
+    ListeAvion.push_back(E2);
 
     int i ;
     int j ;
@@ -72,7 +72,7 @@ int main(){
                 int idTouché = ListeAvion[i]->tirer();
                  if (idTouché != -1 )
                  {
-                     ListeAvionsTouchés.pushback(idTouché);
+                     ListeAvionsTouchés.push_back(idTouché);
                  }
             }
             elimination(ListeAvionsTouchés,ListeAvion);

@@ -16,7 +16,7 @@ Joueur::Joueur(osg::Vec3f pos, osg::Vec3f dir, int num) : Avion()
 Joueur::~Joueur(){
 }
 
-void Joueur::avancer(int cube_size):avion(int cube_size){//i correspond à la place de l'avion dans le vecteur, ne pas oublier de mettre le bon argument dans le main
+void Joueur::avancer(int cube_size) : avion(int cube_size){//i correspond à la place de l'avion dans le vecteur, ne pas oublier de mettre le bon argument dans le main
     position += direction/(sqrt(direction[0]**2+direction.[1]**2+direction[2]**2));
     float taille = (float)cube_size;
 }

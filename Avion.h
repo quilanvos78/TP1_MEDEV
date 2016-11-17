@@ -39,6 +39,6 @@ public:
 	virtual void avancer(int cube_size); //On a défini la fonction vide dans le cpp
 	void tourner(float tang, float dir);
 	void tirer();
-
+	virtual void strategie(std::vector<Avion> v)=0;
 	~Avion();
 };
