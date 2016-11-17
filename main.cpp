@@ -14,7 +14,7 @@ using namespace std ;
 void elimination(vector<int> ListeTouchés, vector<Avion*> &ListeAvion) // Supprime les avions contenus dans le vecteur Listetouchés du vecteur principal ListeAvion à partir de leurs Id
 {
     int i ;
-    init j ;
+    int j ;
     for (i=0;i<ListeAvionsTouchés.size();i++) // on élimine les avions touchés
             {
                 for(j= 0; j<ListeAvion.size();j++)
