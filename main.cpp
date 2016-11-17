@@ -7,32 +7,17 @@
 #include "Ennemi.h"
 #include <vector>
 #include "Cube.h"
-#include "afficher.h"
-
-using namespace std ;
-
-// FONCTIONS UTILITAIRES
-
-
-//MAIN
+//#include "afficher.h"
 
 int main(){
 
-    // INITIALISATION
-
     srand(time(NULL));
     int cube_size = 13;
-    bool fini = false ;
-	string wait;
     Cube world(cube_size);
-	cout<<"hahah"<<endl;
-    while ( !world.getViewer()->done() ) {
-		cout<<"test";
-		cout<<"bouh";
+    while ( !world.fin )
+	{
         world.mainLoop();
     }
-
-
 
     return 0;
     }

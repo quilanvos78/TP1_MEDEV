@@ -7,7 +7,7 @@
 #include "Joueur.h"
 #include "Ennemi.h"
 #include <vector>
-#include "afficher.h"
+//#include "afficher.h"
 #include <osgGA/TrackballManipulator>
 // Base
 #include <osgViewer/Viewer>
@@ -57,4 +57,6 @@ public:
 	Cube(int _n);
 	void afficherCube();
 	int getSize() { return n; }
+
+	bool fin;
 };

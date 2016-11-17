@@ -13,7 +13,6 @@ Avion::Avion(){
 Avion::~Avion(){
 }
 
-void Avion::avancer(int cube_size){};
 
 void Avion::tourner()
 {

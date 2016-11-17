@@ -7,7 +7,7 @@
 #include "Ennemi.h"
 #include <vector>
 #include "Cube.h"
-#include "afficher.h"
+//#include "afficher.h"
 
 #include <iostream>
 #include <ctime>
@@ -18,6 +18,7 @@ using namespace std;
 /* Affichage du monde */
 
 Cube::Cube(int _n) {
+	fin = false;
 	root = new osg::Group;
 	viewer = new osgViewer::Viewer;
 	n = _n;
@@ -91,7 +92,6 @@ void Cube::ConstructionAvion() {
 	osg::ref_ptr<osg::StateSet> StateSetAmi2(patAvionAmi2->getOrCreateStateSet());
 	osg::ref_ptr<osg::StateSet> StateSetEnnemi1(patAvionEnnemi1->getOrCreateStateSet());
 	osg::ref_ptr<osg::StateSet> StateSetEnnemi2(patAvionEnnemi2->getOrCreateStateSet());
-	patAvionAmi1->setPosition(osg::Vec3d(-10,-1,-1));
 
 	StateSetAmi1->setAttribute(mat);
 	StateSetAmi2->setAttribute(mat);
@@ -100,8 +100,8 @@ void Cube::ConstructionAvion() {
 
 	/* SCENE GRAPH */
 	root->addChild(patSCALE.get());
-	//patSCALE->addChild(patAvionEnnemi1.get());
-	//patSCALE->addChild(patAvionEnnemi2.get());
+	patSCALE->addChild(patAvionEnnemi1.get());
+	patSCALE->addChild(patAvionEnnemi2.get());
 	
 	patSCALE->addChild(patAlignement.get());
 	patAlignement->addChild(patAvionAmi1.get());
@@ -115,9 +115,6 @@ void Cube::ConstructionAvion() {
 
 void Cube::afficherCube()
 {
-
-	
-	cout<<"Afficher cube"<<endl;
 	// StateSet de root
 	osg::ref_ptr<osg::StateSet> rootStateSet (root->getOrCreateStateSet());
 
@@ -232,20 +229,13 @@ void Cube::afficherCube()
 	//root->addChild(translationPlane2.get());
 	//root->addChild(translationPlane3.get());
 	//root->addChild(translationPlane4.get());
-
-
-	// Set the scene data
-
-/* START VIEWER */
-
-	//The viewer.run() method starts the threads and the traversals.
 }
 
 
-osg::Vec3f Cube::getSubCubePosition(int i, int j,int k) {
-	float x = (float)(2*i)/n - 1;
-	float y = (float)(2*j)/n - 1;
-	float z = (float)(2*k)/n - 1;
+osg::Vec3f Cube::getSubCubePosition(int i, int j, int k) {
+	float x = (float)(2.0f*i)/n - 1;
+	float y = (float)(2.0f*j)/n - 1;
+	float z = (float)(2.0f*k)/n - 1;
 	osg::Vec3f* pos = new osg::Vec3f(x,y,z);
 	return *pos;
 }
@@ -280,35 +270,22 @@ osg::ref_ptr<osg::Group> Cube::createCube() {
 	return cube;
 }
 
-void Cube::afficherAvion() {
-	cout<<"Afficher avion"<<endl;
-
-	
+void Cube::afficherAvion() {	
 	osg::Quat attitude;
 
-	cout<<getSubCubePosition(ListeAvion[0]->getPosition()[0],ListeAvion[0]->getPosition()[1],ListeAvion[0]->getPosition()[2])[0]<<endl;
-	cout<<getSubCubePosition(ListeAvion[0]->getPosition()[0],ListeAvion[0]->getPosition()[1],ListeAvion[0]->getPosition()[2])[1]<<endl;
-	cout<<getSubCubePosition(ListeAvion[0]->getPosition()[0],ListeAvion[0]->getPosition()[1],ListeAvion[0]->getPosition()[2])[2]<<endl;
-   		osg::ref_ptr<osg::Geode> geodeSubCube (new osg::Geode);
-		osg::ref_ptr<osg::Box> mySubCube (new osg::Box(getSubCubePosition(ListeAvion[0]->getPosition()[0],ListeAvion[0]->getPosition()[1],ListeAvion[0]->getPosition()[2]),2.0/n));
-		osg::ref_ptr<osg::ShapeDrawable> drawableSubCube (new osg::ShapeDrawable(mySubCube.get()));
-		geodeSubCube->addDrawable(drawableSubCube.get());
-		//root->addChild(geodeSubCube);
-	//patAvionAmi1->setPosition(osg::Vec3d(-10,-1,-1));
-	patAvionAmi2->setPosition(getSubCubePosition(ListeAvion[1]->getPosition()[1],ListeAvion[1]->getPosition()[1],ListeAvion[1]->getPosition()[2]));
+	patAvionAmi1->setPosition(ListeAvion[0]->getPosition());
+	patAvionAmi2->setPosition(osg::Vec3d(ListeAvion[1]->getPosition()[1],ListeAvion[1]->getPosition()[1],ListeAvion[1]->getPosition()[2]));
 	patAvionEnnemi1->setPosition(getSubCubePosition(ListeAvion[2]->getPosition()[2],ListeAvion[2]->getPosition()[1],ListeAvion[2]->getPosition()[2]));
 	patAvionEnnemi2->setPosition(getSubCubePosition(ListeAvion[3]->getPosition()[3],ListeAvion[3]->getPosition()[1],ListeAvion[3]->getPosition()[2]));
+	
 	attitude.makeRotate(osg::Vec3d(1,0,0),osg::Vec3d(ListeAvion[0]->getDirection()));
-	//patAvionAmi1->setAttitude(attitude);
+	patAvionAmi1->setAttitude(attitude);
 	attitude.makeRotate(osg::Vec3d(1,0,0),osg::Vec3d(ListeAvion[1]->getDirection()));
 	patAvionAmi2->setAttitude(attitude);
 	attitude.makeRotate(osg::Vec3d(1,0,0),osg::Vec3d(ListeAvion[2]->getDirection()));
 	patAvionEnnemi1->setAttitude(attitude);
 	attitude.makeRotate(osg::Vec3d(1,0,0),osg::Vec3d(ListeAvion[3]->getDirection()));
 	patAvionEnnemi2->setAttitude(attitude);
-
-
-
 }
 
 void Cube::elimination(vector<int> ListeTouchés, vector<Avion*> &ListeAvion) // Supprime les avions contenus dans le vecteur Listetouchés du vecteur principal ListeAvion à partir de leurs Id
@@ -355,32 +332,22 @@ void Cube::mainLoop() {
         ListeAvion[i]->tourner();
         ListeAvion[i]->avancer(n);
     }
-    /*ListeAvion[0]->DetecteCollision(n,ListeAvion);
+	/*
+    ListeAvion[0]->DetecteCollision(n,ListeAvion);
 
     vector<int> ListeAvionsTouches ;
     for (unsigned int i=0;i<ListeAvion.size();i++) // Chaque avion Tire et on récupère les id des avions touchés
     {
         int idTouche = ListeAvion[i]->tirer(n, ListeAvion);
-	cout<<"2"<<endl;
         if (idTouche != -1 )
         {
-	cout<<"3"<<endl;
             ListeAvionsTouches.push_back(idTouche);
         }
     }
-	cout<<"4"<<endl;
-    elimination(ListeAvionsTouches,ListeAvion);*/
+    elimination(ListeAvionsTouches,ListeAvion);
+	*/
 
-	if ( compteur == 50 ) {
-		
-   		osg::ref_ptr<osg::Geode> geodeSubCube (new osg::Geode);
-		osg::ref_ptr<osg::Box> mySubCube (new osg::Box(osg::Vec3f(1,1,1),0.5));
-		osg::ref_ptr<osg::ShapeDrawable> drawableSubCube (new osg::ShapeDrawable(mySubCube.get()));
-		geodeSubCube->addDrawable(drawableSubCube.get());
-		//root->addChild(geodeSubCube);
-
-	}
-	compteur ++;
-	cout<<compteur<<endl;
+	patAvionAmi1->setPosition(ListeAvion[0]->getPosition());
+	fin = viewer->done();
     viewer->frame();
 }

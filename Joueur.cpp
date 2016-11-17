@@ -3,6 +3,7 @@
 #include<osg/vec3f>
 #include <vector>
 #include <cstdlib>
+#include <iostream>
 
 
 using namespace osg;
@@ -37,7 +38,7 @@ void Joueur::strategie(std::vector<Avion*> &v){
 
     int indiceProche = -1; //indice de l'avion ennemi  le plus proche
     float angleMin = -1;
-    for (int i = 0; i< v.size();i++)
+    for (unsigned int i = 0; i< v.size();i++)
     {
         if (v[i]->getCamp()) //avion ennemi
         {
@@ -80,7 +81,7 @@ void Joueur::strategie(std::vector<Avion*> &v){
 
 
     //Prevoir l'evitement des murs
-     for (int i = 0; i< v.size();i++)
+     for (unsigned int i = 0; i< v.size();i++)
     {
     }
 
