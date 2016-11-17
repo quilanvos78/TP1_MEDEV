@@ -9,7 +9,9 @@
 #include "Cube.h"
 using namespace std ;
 
-void elimination(vector<int> ListeTouchés, vector<Avion*> &ListeAvion)
+// FONCTIONS UTILITAIRES
+
+void elimination(vector<int> ListeTouchés, vector<Avion*> &ListeAvion) // Supprime les avions contenus dans le vecteur Listetouchés du vecteur principal ListeAvion à partir de leurs Id
 {
     int i ;
     init j ;
@@ -26,11 +28,11 @@ void elimination(vector<int> ListeTouchés, vector<Avion*> &ListeAvion)
             }
 }
 
-bool VerificationFin(vector<Avion> ListeAvion)
+bool VerificationFin(vector<Avion> ListeAvion) // Si il reste deux avions ou moins, on regarde leurs camps pour savoir si la partie est finie
 {
     if (ListeAvion.size() == 2)
     {
-       return  ListeAvion[0]->getCamp() == ListeAvion[1]->getCamp()
+       return  (ListeAvion[0]->getCamp() == ListeAvion[1]->getCamp());
     }
     if (ListeAvion.size() == 1)
     {
@@ -42,16 +44,24 @@ bool VerificationFin(vector<Avion> ListeAvion)
     }
 }
 
+//MAIN
+
 int main(){
+
+    // INITIALISATION
+
     srand(Time(NULL));
     osg::int cube_size = 13;
     osg::bool fini = false ;
+
+    //Création des avions
     Joueur* J1 = new Joueur();
     Joueur* J2 = new Joueur();
     Ennemi* E1 = new Ennemi();
     Ennemi* E2 = new Ennemi();
     J1.setPosition = osg::Vec3f(0,5,0);
     J1.setDirection = osg::Vec3f(1,0,0);
+    J1.setId(0)
     J2.setPosition = osg::Vec3f(0,8,0);
     J2.setDirection = osg::Vec3f(1,0,0);
     E1.setPosition = osg::Vec3f(13,5,13);
@@ -63,6 +73,8 @@ int main(){
     ListeAvion.push_back(J2);
     ListeAvion.push_back(E1);
     ListeAvion.push_back(E2);
+
+    //BOUCLE PRINCIPALE
 
     int i ;
     int j ;
@@ -84,7 +96,7 @@ int main(){
                 ListeAvion[i]->tourner();
                 ListeAvion[i]->avancer(cube_size,ListeAvion,i);
             }
-            VerificationCollision(ListeAvion);
+            DetecteCollision(ListeAvion);
 
             vector<int> ListeAvionsTouchés ;
             for (i=0;i<ListeAvion.size();i++) // Chaque avion Tire et on récupère les id des avions touchés
