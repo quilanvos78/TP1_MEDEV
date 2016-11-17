@@ -2,6 +2,9 @@
 
 #include "Avion.h"
 
-class Ennemi : public Avion{
+class avionEnnemi : public Avion{
 
+public:
+	virtual void avancer();
+	virtual void tourner(osg::Vec3f angle);
 };
