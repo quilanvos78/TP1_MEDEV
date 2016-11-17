@@ -59,3 +59,59 @@ static void Avion::DetecteCollision(int cube_size, &vector<Avion*> avions){
         avions.erase(avions.begin()+idem[i]);
     }
 }
+
+int Avion::tirer(int taillecube, std::vector<Avion> ListeAvions) // Renvoie l'identifiant de l'avion touché
+{
+	if (cooldown==false)
+	{
+		setCooldown(true);
+		//****Initialisation****
+
+		//le pas de de déplacement du projectile
+		float eps=0.01;
+
+		//Position du projectile
+		float posProj=position;
+
+		//Nombre d'avions dans la partie
+		int nbAvions = 	ListeAvions.size();
+
+		//Vecteur direction de l'avion que l'on normalise
+		float directionProj=direction;
+		float norme=sqrt(pow(directionProj[0],2)+pow(directionProj[1],2)+pow(directionProj[2],2));
+		directionProj[0]=directionProj[0]/norme;
+		directionProj[1]=directionProj[1]/norme;
+		directionProj[2]=directionProj[2]/norme;
+
+		//****Création de la boucle de tir***
+
+		//Si un avion est touché la boucle s'arrête
+		//si le tir sort du cube aussi
+		while ((posProj[0]<taillecube)||(posProj[1]<taillecube)||(posProj[2]<taillecube))
+		{
+		// On regarde la position de chaque avion
+			for (int n=0; n<nbAvions; n++)
+			{
+				float posAvion=ListeAvions[n].getPosition();
+		// On regarde si un avion et le projectile se trouvent dans la même case
+		// Auquel cas ils ont les mêmes coordonnées entières
+				if ((floor(posAvion[0])==floor(posProj[0]))&&(floor(posAvion[1])==floor(posProj[1]))&&(floor(posAvion[2])==floor(posProj[2])))
+				{
+		// On vérifie que l'avion tireur ne s'auto-détruise pas avec son propre projectile
+					if (posAvion!=position)
+					{
+						//Renvoie la position de l'avion dans le vecteur d'avions si un avion a été touché
+						return (ListeAvions[n].getId());
+					}
+				}
+			}
+		// On actualise les coordonnées de la position du projectile
+			posProj[0]=posProj[0]+eps*directionProj[0];
+			posProj[1]=posProj[1]+eps*directionProj[1];
+			posProj[2]=posProj[2]+eps*directionProj[2];
+		}
+	}
+
+	//Renvoie -1 si aucun avion n'a pas été touché
+	return (-1);
+}
