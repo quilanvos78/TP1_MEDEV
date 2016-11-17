@@ -8,7 +8,7 @@ public:
 	avionJoueur(osg::Vec3f pos, osg::Vec3f dir);
 	~avionJoueur();
 
-	virtual void avancer();
+	void avancer(int cube_size,&vector<avion*> avions, int i);
 	virtual void tourner(osg::Vec3f angle);
 
 };
