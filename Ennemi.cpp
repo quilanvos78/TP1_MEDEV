@@ -2,14 +2,15 @@
 #include<cmath>
 #include<osg/vec3f>
 
-avionEnnemi::avionEnnemi(osg::Vec3f pos, osg::Vec3f dir) : Avion()
+Ennemi::Ennemi(osg::Vec3f pos, osg::Vec3f dir, int num) : Avion()
 {
 	position = pos;
 	direction = dir;
 	camp=false;
+	id=num;
 }
 
-avionEnnemi::~avionEnnemi(){
+Ennemi::~Ennemi(){
 }
 
 void Ennemi::avancer(int cube_size,&vector<avion*> avions, int i):avion(int cube_size,&vector<avion*> avions, int i){

@@ -2,11 +2,11 @@
 
 #include "Avion.h"
 
-class avionEnnemi : public Avion{
+class Ennemi : public Avion{
 
 public:
-	avionEnnemi(osg::Vec3f pos, osg::Vec3f dir);
-	~avionEnnemi();
+	Ennemi(osg::Vec3f pos, osg::Vec3f dir, int num);
+	~Ennemi();
 
 	bool getCamp(){return camp;};
 	void setCamp(bool _camp){ camp=_camp;};
