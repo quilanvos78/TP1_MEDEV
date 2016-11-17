@@ -2,6 +2,7 @@
 #include<cmath>
 #include<osg/vec3f>
 #include <vector>
+#include <cstdlib>
 
 using namespace osg;
 
@@ -21,7 +22,7 @@ void Joueur::avancer(int cube_size) : avion(int cube_size){//i correspond à la 
     float taille = (float)cube_size;
 }
 
-void Joueur::strategie(std::vector<Avion> v){
+void avionJoueur::strategie(vector<Avion> v){
 
     //Strategie hors mur
     //Si on peut pointer (cône 45degree) vers un avion ennemi (qui avance
@@ -36,10 +37,10 @@ void Joueur::strategie(std::vector<Avion> v){
         {
             Vec3f posFuture = v[i].getPosition +v[i].getDirection - position;
             posFuture.normalize();
-            float prodScal = posFuture^direction;
+            float prodScal = posFuture*direction;
             if (prodScal<angleMin || angleMin == -1)
             {
-                angleMin = acos(prodScal);
+                angleMin = acos(prodScal)*180.0/M_PI;
                 indiceProche = i;
             }
         }
@@ -57,14 +58,24 @@ void Joueur::strategie(std::vector<Avion> v){
     if (angleMin< 80)
     {
         angle = min(angleMin, 45.0f);
-
+        posFuture = v[indiceProche].getPosition+v[indiceProche].getDirection - position;
+        vec3f projection = posFuture - direction * (direction*posFuture);
+        projection.normalize();
+        cap = acos(projection*up)*180.0/ M_PI;
+        float sens = (projection^up)*direction;
+        if (sens <0)
+        {cap = 360-cap;}
+    }
+    else //pas d'avion a moins de 80 degres
+    {
+        angle = 45; //on tourne le plus possible
+        cap = rand()% 360;//dans une direction aleatoire
     }
 
 
     //Prevoir l'evitement des murs
      for (int i = 0; i< v.size();i++)
     {
-        if (v[i].camp == 0)
     }
 
 }
