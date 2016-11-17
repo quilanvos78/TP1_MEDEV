@@ -92,7 +92,7 @@ int Avion::tirer(int taillecube, std::vector<Avion> ListeAvions) // Renvoie l'id
 		// On regarde la position de chaque avion
 			for (int n=0; n<nbAvions; n++)
 			{
-				float posAvion=ListeAvions[n].getPosition();
+				osg::Vec3f posAvion=ListeAvions[n].getPosition();
 		// On regarde si un avion et le projectile se trouvent dans la même case
 		// Auquel cas ils ont les mêmes coordonnées entières
 				if ((floor(posAvion[0])==floor(posProj[0]))&&(floor(posAvion[1])==floor(posProj[1]))&&(floor(posAvion[2])==floor(posProj[2])))
