@@ -13,8 +13,9 @@ Ennemi::Ennemi(osg::Vec3f pos, osg::Vec3f dir, int num) : Avion()
 Ennemi::~Ennemi(){
 }
 
-void Ennemi::avancer(int cube_size):avion(int cube_size){
-    position += direction/(sqrt(direction[0]**2+direction.[1]**2+direction[2]**2));
+void Ennemi::avancer(int cube_size) : avion(int cube_size){
+    using namespace std;
+    position += direction/(sqrt(direction.x*direction.x+direction.y*direction.y+direction.z*direction.z));
     float taille = (float)cube_size;
     if (position.x < 0){
         position.x += taille;
