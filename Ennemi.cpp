@@ -40,7 +40,7 @@ void avionEnnemi::Strategie(std::vector<Avion> &avions){
 
 	//Trouver ennemi le plus proche
 	Avion *plusProche;
-	plusProche=trouverJoueurProche(avions);+
+	plusProche=trouverJoueurProche(avions);
 
 	//
 
