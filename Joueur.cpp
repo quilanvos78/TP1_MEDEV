@@ -4,7 +4,13 @@
 #include <vector>
 #include <cstdlib>
 
+
 using namespace osg;
+
+Joueur::Joueur() : Avion()
+{
+	camp=false;
+}
 
 Joueur::Joueur(osg::Vec3f pos, osg::Vec3f dir, int num) : Avion()
 {
@@ -17,12 +23,12 @@ Joueur::Joueur(osg::Vec3f pos, osg::Vec3f dir, int num) : Avion()
 Joueur::~Joueur(){
 }
 
-void Joueur::avancer(int cube_size) : avion(int cube_size){//i correspond à la place de l'avion dans le vecteur, ne pas oublier de mettre le bon argument dans le main
-    position += direction/(sqrt(direction[0]**2+direction.[1]**2+direction[2]**2));
+void Joueur::avancer(int cube_size){//i correspond à la place de l'avion dans le vecteur, ne pas oublier de mettre le bon argument dans le main
+	position += direction/(sqrt(direction[0]*direction[0]+direction[1]*direction[1]+direction[2]*direction[2]));
     float taille = (float)cube_size;
 }
 
-void avionJoueur::strategie(vector<Avion> v){
+void Joueur::strategie(std::vector<Avion*> &v){
 
     //Strategie hors mur
     //Si on peut pointer (cône 45degree) vers un avion ennemi (qui avance
@@ -33,9 +39,9 @@ void avionJoueur::strategie(vector<Avion> v){
     float angleMin = -1;
     for (int i = 0; i< v.size();i++)
     {
-        if (v[i].getCamp) //avion ennemi
+        if (v[i]->getCamp()) //avion ennemi
         {
-            Vec3f posFuture = v[i].getPosition +v[i].getDirection - position;
+            Vec3f posFuture = v[i]->getPosition() +v[i]->getDirection() - position;
             posFuture.normalize();
             float prodScal = posFuture*direction;
             if (prodScal<angleMin || angleMin == -1)
@@ -57,11 +63,11 @@ void avionJoueur::strategie(vector<Avion> v){
     //deplacement vers l'avion le plus proche
     if (angleMin< 80)
     {
-        angle = min(angleMin, 45.0f);
-        posFuture = v[indiceProche].getPosition+v[indiceProche].getDirection - position;
-        vec3f projection = posFuture - direction * (direction*posFuture);
+        angle = minimum(angleMin, 45.0f);
+        osg::Vec3f posFuture = v[indiceProche]->getPosition()+v[indiceProche]->getDirection() - position;
+        osg::Vec3f projection = posFuture - direction * (direction*posFuture);
         projection.normalize();
-        cap = acos(projection*up)*180.0/ M_PI;
+        cap = acos(projection*up)*180.0/(3.1415);
         float sens = (projection^up)*direction;
         if (sens <0)
         {cap = 360-cap;}

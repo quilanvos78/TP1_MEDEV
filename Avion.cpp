@@ -15,34 +15,34 @@ Avion::~Avion(){
 
 void Avion::avancer(int cube_size){};
 
-void Avion::tourner(float tang, float dir)
+void Avion::tourner()
 {
-	osg::Quat q1 = osg::Quat( tang*osg::PI/180.f,osg::Vec3d(direction^up),0, osg::Vec3d(direction),0, osg::Vec3d(up)); 
+	osg::Quat q1 = osg::Quat( angle*osg::PI/180.f,osg::Vec3d(direction^up),0, osg::Vec3d(direction),0, osg::Vec3d(up)); 
 	up=q1*osg::Vec3d(up);
 
-	osg::Quat q2 = osg::Quat( 0, osg::Vec3d(direction^up),dir*osg::PI/180.f, osg::Vec3d(direction),0, osg::Vec3d(up));
+	osg::Quat q2 = osg::Quat( 0, osg::Vec3d(direction^up),cap*osg::PI/180.f, osg::Vec3d(direction),0, osg::Vec3d(up));
 	direction=q2*q1*osg::Vec3d(direction);
 
 	up=q2*osg::Vec3d(up);
 }
 
-static void Avion::DetecteCollision(int cube_size, &vector<Avion*> avions){
-    vector<int> idem;
-    for (unsigned int i = 0, i<avions.size(), i++){//ici, on vérifie les murs et on compare les positions relatives (voir si deux sont ds le meme cube) 
-        pos1 = avions[i]->getPosition();
-        if (pos1.x < 0 || pos1.x > cube_size || pos1.y < 0 || pos1.y > cube_size || pos1.z < 0 || pos1.z > cube_size ){
+void Avion::DetecteCollision(int cube_size, std::vector<Avion*> &avions){
+    std::vector<int> idem;
+    for (unsigned int i = 0; i<avions.size(); i++){//ici, on vérifie les murs et on compare les positions relatives (voir si deux sont ds le meme cube) 
+        osg::Vec3f pos1 = avions[i]->getPosition();
+        if (pos1[0] < 0 || pos1[0] > cube_size || pos1[1] < 0 || pos1[1] > cube_size || pos1[2] < 0 || pos1[2] > cube_size ){
             idem.push_back(i);
         }
-        for (unsigned int j = i+1, j<avions.size(), j++){
-            pos2 = avions[j]->getPosition();
-            if ((int)pos1.x == (int)pos2.x && (int)pos1.y == (int)pos2.y && (int)pos1.z == (int)pos2.z){
+        for (unsigned int j = i+1; j<avions.size(); j++){
+           osg::Vec3f pos2 = avions[j]->getPosition();
+            if ((int)pos1[0] == (int)pos2[0] && (int)pos1[1] == (int)pos2[1] && (int)pos1[2] == (int)pos2[2]){
                 idem.push_back(i);
                 idem.push_back(j);
             }
         }
     }
-    for (unsigned int i = 0, i< idem.size-1, i++){//on trie la liste des index des avions à détruire dans l'ordre décroissant pour éviter les problèmes
-        for (unsigned int j = 0, j<idem.size-i,j++){//de chgment d'index lors de l'erase
+    for (unsigned int i = 0; i< idem.size()-1; i++){//on trie la liste des index des avions à détruire dans l'ordre décroissant pour éviter les problèmes
+        for (unsigned int j = 0; j<idem.size()-i;j++){//de chgment d'index lors de l'erase
             if (idem[j]<idem[j+1]){
                 int a = idem[j];
                 idem[j] = idem[j+1];
@@ -55,12 +55,12 @@ static void Avion::DetecteCollision(int cube_size, &vector<Avion*> avions){
         if (idem[i] != idem[i+1]){i++;}
         else{idem.erase(idem.begin()+i);}
     }
-    for (unsigned int i<idem.size()){//on efface
+    for(unsigned int i = 0; i<idem.size(); i++){//on efface
         avions.erase(avions.begin()+idem[i]);
     }
 }
 
-int Avion::tirer(int taillecube, std::vector<Avion> ListeAvions) // Renvoie l'identifiant de l'avion touché
+int Avion::tirer(int taillecube, std::vector<Avion*> &ListeAvions) // Renvoie l'identifiant de l'avion touché
 {
 	if (cooldown==false)
 	{
@@ -92,7 +92,7 @@ int Avion::tirer(int taillecube, std::vector<Avion> ListeAvions) // Renvoie l'id
 		// On regarde la position de chaque avion
 			for (int n=0; n<nbAvions; n++)
 			{
-				float posAvion=ListeAvions[n].getPosition();
+				osg::Vec3f posAvion=ListeAvions[n]->getPosition();
 		// On regarde si un avion et le projectile se trouvent dans la même case
 		// Auquel cas ils ont les mêmes coordonnées entières
 				if ((floor(posAvion[0])==floor(posProj[0]))&&(floor(posAvion[1])==floor(posProj[1]))&&(floor(posAvion[2])==floor(posProj[2])))
@@ -101,7 +101,7 @@ int Avion::tirer(int taillecube, std::vector<Avion> ListeAvions) // Renvoie l'id
 					if (posAvion!=position)
 					{
 						//Renvoie la position de l'avion dans le vecteur d'avions si un avion a été touché
-						return (ListeAvions[n].getId());
+						return (ListeAvions[n]->getId());
 					}
 				}
 			}
