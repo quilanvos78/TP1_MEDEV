@@ -6,8 +6,25 @@
 #include <vector>
 using namespace std ;
 
+void elimination(vector<int> ListeTouchés, vector<Avion*> &ListeAvion)
+{
+    int i ;
+    int j ; 
+    for (i=0;i<ListeAvionsTouchés.size();i++) // on élimine les avions touchés
+            {
+                for(j= 0; j<ListeAvion.size();j++)
+                {
+                    if (ListeAvion[j].getId() == ListeAvionsTouchés[i])
+                    {
+                         ListeAvion.erase(ListeAvion.begin() + j);
+                    }
+                }
+
+            }
+}
 
 int main(){
+    int cube_size = 13;
     bool fini = false ;
     Joueur* J1 = new Joueur();
     Joueur* J2 = new Joueur();
@@ -45,8 +62,10 @@ int main(){
             for (i=0;i<ListeAvion.size();i++) // faire tourner et avancer tous les avions
             {
                 ListeAvion[i]->tourner();
-                ListeAvion[i]->avancer(ListeAvion,i);
+                ListeAvion[i]->avancer(cube_size,ListeAvion,i);
             }
+            VerificationCollision(ListeAvion);
+            
             vector<int> ListeAvionsTouchés ;
             for (i=0;i<ListeAvion.size();i++) // Chaque avion Tire et on récupère les id des avions touchés
             {
@@ -56,21 +75,12 @@ int main(){
                      ListeAvionsTouchés.pushback(idTouché);
                  }
             }
-            for (i=0;i<ListeAvionsTouchés.size();i++) // on élimine les avions touchés
-            {
-                for(j= 0; j<ListeAvion.size();j++)
-                {
-                    if (ListeAvion[j].getId() == ListeAvionsTouchés[i])
-                    {
-                         ListeAvion.erase(ListeAvion.begin() + j);
-                    }
-                }
-
-            }
+            elimination(ListeAvionsTouchés,ListeAvion);
+           
         }
 
      }
 
-
+    return 0;
     }
 
