@@ -10,7 +10,7 @@
 //#include "afficher.h"
 
 int main(){
-
+	cout<<"bonjour"<<endl;
     srand(time(NULL));
     int cube_size = 13;
     Cube world(cube_size);

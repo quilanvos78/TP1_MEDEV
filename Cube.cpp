@@ -30,7 +30,7 @@ Cube::Cube(int _n) {
     J1->setPosition(osg::Vec3f(0,5,0));
     J1->setDirection(osg::Vec3f(1,0,0));
     J1->setId(0);
-    J2->setPosition(osg::Vec3f(0,3,0));
+    J2->setPosition(osg::Vec3f(10,10,0));
     J2->setDirection(osg::Vec3f(1,0,0));
     E1->setPosition(osg::Vec3f(2,5,2));
     E1->setDirection(osg::Vec3f(-1,0,0));
@@ -100,8 +100,8 @@ void Cube::ConstructionAvion() {
 
 	/* SCENE GRAPH */
 	root->addChild(patSCALE.get());
-	patSCALE->addChild(patAvionEnnemi1.get());
-	patSCALE->addChild(patAvionEnnemi2.get());
+	patAvionEnnemi1->addChild(patSCALE.get());
+	patAvionEnnemi2->addChild(patSCALE.get());
 	
 	patSCALE->addChild(patAlignement.get());
 	patAlignement->addChild(patAvionAmi1.get());
@@ -273,19 +273,20 @@ osg::ref_ptr<osg::Group> Cube::createCube() {
 void Cube::afficherAvion() {	
 	osg::Quat attitude;
 
-	patAvionAmi1->setPosition(ListeAvion[0]->getPosition());
-	patAvionAmi2->setPosition(osg::Vec3d(ListeAvion[1]->getPosition()[1],ListeAvion[1]->getPosition()[1],ListeAvion[1]->getPosition()[2]));
-	patAvionEnnemi1->setPosition(getSubCubePosition(ListeAvion[2]->getPosition()[2],ListeAvion[2]->getPosition()[1],ListeAvion[2]->getPosition()[2]));
-	patAvionEnnemi2->setPosition(getSubCubePosition(ListeAvion[3]->getPosition()[3],ListeAvion[3]->getPosition()[1],ListeAvion[3]->getPosition()[2]));
+	patAvionAmi1->setPosition(osg::Vec3d(10000,10000,10000));
+	patAvionAmi2->setPosition(osg::Vec3d(ListeAvion[1]->getPosition()[0]*1000,ListeAvion[1]->getPosition()[1]*1000,ListeAvion[1]->getPosition()[2]*1000));
+	patAvionEnnemi1->setPosition(getSubCubePosition(ListeAvion[2]->getPosition()[0],ListeAvion[2]->getPosition()[1],ListeAvion[2]->getPosition()[2]));
+	patAvionEnnemi2->setPosition(getSubCubePosition(ListeAvion[3]->getPosition()[0],ListeAvion[3]->getPosition()[1],ListeAvion[3]->getPosition()[2]));
 	
 	attitude.makeRotate(osg::Vec3d(1,0,0),osg::Vec3d(ListeAvion[0]->getDirection()));
-	patAvionAmi1->setAttitude(attitude);
+	//patAvionAmi1->setAttitude(attitude);
 	attitude.makeRotate(osg::Vec3d(1,0,0),osg::Vec3d(ListeAvion[1]->getDirection()));
 	patAvionAmi2->setAttitude(attitude);
 	attitude.makeRotate(osg::Vec3d(1,0,0),osg::Vec3d(ListeAvion[2]->getDirection()));
 	patAvionEnnemi1->setAttitude(attitude);
 	attitude.makeRotate(osg::Vec3d(1,0,0),osg::Vec3d(ListeAvion[3]->getDirection()));
 	patAvionEnnemi2->setAttitude(attitude);
+	cout<<ListeAvion[0]->getDirection()[0]<<" "<<ListeAvion[0]->getDirection()[1]<<" "<<ListeAvion[0]->getDirection()[2]<<endl;
 }
 
 void Cube::elimination(vector<int> ListeTouchés, vector<Avion*> &ListeAvion) // Supprime les avions contenus dans le vecteur Listetouchés du vecteur principal ListeAvion à partir de leurs Id
@@ -321,7 +322,7 @@ bool Cube::VerificationFin(std::vector<Avion*> &ListeAvion) // Si il reste deux 
 
 void Cube::mainLoop() {
 
-		afficherAvion();
+	afficherAvion();
 	
     for (unsigned int i=0;i<ListeAvion.size();i++) // Annonce les paramètres de chaque avion
     {
@@ -346,8 +347,6 @@ void Cube::mainLoop() {
     }
     elimination(ListeAvionsTouches,ListeAvion);
 	*/
-
-	patAvionAmi1->setPosition(ListeAvion[0]->getPosition());
 	fin = viewer->done();
     viewer->frame();
 }

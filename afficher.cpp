@@ -7,7 +7,9 @@ using namespace std;
 int afficherAvion(vector<Avion*> escadron)
 {
 	/* OBJECTS CREATION */
-
+	
+	cout<<"bonjour"<<endl;
+	cout<<escadron[0]->getPosition()[0]<<" "<<escadron[0]->getPosition()[1]<<" "<<escadron[0]->getPosition()[2]<<endl;
 	/* VIEWER CREATION */
 
 	osg::ref_ptr<osgViewer::Viewer> viewer = new osgViewer::Viewer;
@@ -31,6 +33,7 @@ int afficherAvion(vector<Avion*> escadron)
 	patAvionAmi2->setPosition(escadron[1]->getPosition());
 	patAvionEnnemi1->setPosition(escadron[2]->getPosition());
 	patAvionEnnemi2->setPosition(escadron[3]->getPosition());
+
 	attitude.makeRotate(osg::Vec3d(1,0,0),osg::Vec3d(escadron[0]->getDirection()));
 	patAvionAmi1->setAttitude(attitude);
 	attitude.makeRotate(osg::Vec3d(1,0,0),osg::Vec3d(escadron[1]->getDirection()));

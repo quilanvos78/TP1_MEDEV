@@ -58,7 +58,7 @@ void Joueur::strategie(std::vector<Avion*> &v){
     {
         tir = true;
     }
-    else{
+    else {
         tir = false;
     }
     //deplacement vers l'avion le plus proche
@@ -70,8 +70,9 @@ void Joueur::strategie(std::vector<Avion*> &v){
         projection.normalize();
         cap = acos(projection*up)*180.0/(3.1415);
         float sens = (projection^up)*direction;
-        if (sens <0)
-        {cap = 360-cap;}
+        if (sens <0) {
+			cap = 360-cap;
+		}
     }
     else //pas d'avion a moins de 80 degres
     {

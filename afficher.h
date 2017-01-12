@@ -7,6 +7,7 @@
 #include <osg/Camera>
 #include <osgDB/ReadFile>
 #include <vector>
+#include <iostream>
 #include "Avion.h"
 
 int afficher(std::vector<Avion*> escadron);
